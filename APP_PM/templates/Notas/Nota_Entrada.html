@@ -59,10 +59,17 @@
     <form method="post" class="mt-4">
         {% csrf_token %}
         <div class="form-group">
+<<<<<<< HEAD
             <div class="form-group">
                 {{ form.cliente.label_tag }}
                 {{ form.cliente }}
             </div>
+=======
+            {{ form.cliente.label_tag }}
+            {{ form.cliente }}
+        </div>
+        <div class="form-group">
+>>>>>>> 0db2392cc67ec8970c8b28d80baef0b4a9f5e25f
             {{ form.producto_nombre.label_tag }}
             {{ form.producto_nombre }}
             <input type="hidden" id="producto-id" name="producto_id">
@@ -83,6 +90,10 @@
                 <th>Producto</th>
                 <th>Unidad</th>
                 <th>Cantidad</th>
+<<<<<<< HEAD
+=======
+                
+>>>>>>> 0db2392cc67ec8970c8b28d80baef0b4a9f5e25f
             </tr>
         </thead>
         <tbody>
@@ -92,6 +103,10 @@
                 <td>{{ nota.producto.nombre_producto }}</td>
                 <td>{{ nota.producto.unidad }}</td>
                 <td>{{ nota.cantidad }}</td>
+<<<<<<< HEAD
+=======
+                
+>>>>>>> 0db2392cc67ec8970c8b28d80baef0b4a9f5e25f
             </tr>
             {% endfor %}
         </tbody>
