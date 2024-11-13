@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Cliente</title>
+    {% extends 'Home/home.html' %}
+    {% block content %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 2rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #0d6efd;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            font-weight: bold;
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="form-container">
+            <h2>Agregar Cliente</h2>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="id_tipo_identificacion">Tipo de Identificación</label>
+                    {{ form.tipo_identificacion }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_tipo_persona">Tipo de Persona</label>
+                    {{ form.tipo_persona }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_nombre">Nombre</label>
+                    {{ form.nombre }}
+                </div>
+
+                <div class="form-group" id="persona-natural">
+                    <label for="id_primer_nombre">Primer Nombre</label>
+                    {{ form.primer_nombre }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_segundo_nombre">Segundo Nombre</label>
+                    {{ form.segundo_nombre }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_primer_apellido">Primer Apellido</label>
+                    {{ form.primer_apellido }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_segundo_apellido">Segundo Apellido</label>
+                    {{ form.segundo_apellido }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_razon_social">Razón Social</label>
+                    {{ form.razon_social }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_nombre_comercial">Nombre Comercial</label>
+                    {{ form.nombre_comercial }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_contacto_responsable">Contacto Responsable</label>
+                    {{ form.contacto_responsable }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_direccion">Dirección</label>
+                    {{ form.direccion }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_pais">País</label>
+                    {{ form.pais }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_ciudad">Ciudad</label>
+                    {{ form.ciudad }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_telefono1">Teléfono 1</label>
+                    {{ form.telefono1 }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_telefono2">Teléfono 2 (Opcional)</label>
+                    {{ form.telefono2 }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_sexo">Sexo</label>
+                    {{ form.sexo }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_correo_electronico">Correo Electrónico</label>
+                    {{ form.correo_electronico }}
+                </div>
+
+                <div class="form-group">
+                    <label>Declarante de Renta</label>
+                    {{ form.declarante_renta }}
+                </div>
+
+                <div class="form-group">
+                    <label>Agente de Renta</label>
+                    {{ form.agente_renta }}
+                </div>
+
+                <div class="form-group">
+                    <label>Autoretenedor</label>
+                    {{ form.autoretenedor }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_codigo_postal">Código Postal</label>
+                    {{ form.codigo_postal }}
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tipoPersonaField = document.getElementById('id_tipo_persona');
+            const camposPersonaNatural = [
+                'id_primer_nombre', 'id_segundo_nombre', 
+                'id_primer_apellido', 'id_segundo_apellido'
+            ];
+            const razonSocialField = document.getElementById('id_razon_social');
+
+            function toggleCampos() {
+                if (tipoPersonaField.value === 'PN') {
+                    camposPersonaNatural.forEach(function(id) {
+                        document.getElementById(id).closest('.form-group').style.display = 'block';
+                    });
+                    razonSocialField.closest('.form-group').style.display = 'none';
+                } else {
+                    camposPersonaNatural.forEach(function(id) {
+                        document.getElementById(id).closest('.form-group').style.display = 'none';
+                    });
+                    razonSocialField.closest('.form-group').style.display = 'block';
+                }
+            }
+
+            toggleCampos();
+            tipoPersonaField.addEventListener('change', toggleCampos);
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

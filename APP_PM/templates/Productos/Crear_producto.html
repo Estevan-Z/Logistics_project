@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Producto</title>
+    {% extends 'Home/home.html' %}
+    {% block content %}
+    <style>
+        
+
+        .container {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            
+            
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form .form-group {
+            margin-bottom: 15px;
+        }
+
+        form label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        form input[type="text"],
+
+        form textarea, select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        input[type="text"], input[type="email"], input[type="number"], button, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        form input[type="submit"]:hover {
+            background-color: #218838;
+        }
+
+        .form-group .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+        }
+        button {
+        display: inline-block;
+        background-color: #007bff;
+        text-align: center;
+        text-decoration: none;
+        color: #fff;
+        cursor: pointer;
+        font-size: 16px; 
+        border: none;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Crear Productos</h2>
+
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Crear Producto</button>
+            </form>
+    </div>
+</body>
+</html>
+{% endblock %}
