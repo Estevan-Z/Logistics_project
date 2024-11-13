@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CrearProductoForm, ClienteForm
+from .forms import CrearProductoForm
 from .models import Crear_producto
 
 def home(request):
@@ -54,8 +54,6 @@ def eliminar_producto(request, id_producto):
     return redirect('productos_listado')
 
 
-
-# views.py
 from django.shortcuts import render, redirect
 from .models import NotaEntrada, Crear_producto
 from .forms import NotaEntradaForm
@@ -90,13 +88,3 @@ def buscar_producto(request):
 
 
 
-def agregar_cliente(request):
-    if request.method == 'POST':
-        form = ClienteForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('lista_clientes')  # Redirigir a la lista de clientes después de guardar
-    else:
-        form = ClienteForm()
-
-    return render(request, 'Terceros/Crear_clientes.html', {'form': form})
