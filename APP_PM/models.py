@@ -39,14 +39,12 @@ class Crear_producto(models.Model):
 
 
 #NOTA DE ENTRADA
-# models.py
-from django.db import models
-
 class NotaEntrada(models.Model):
     producto = models.ForeignKey(Crear_producto, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField()
-    observaciones = models.TextField(blank=True, null=True)
+    cliente = models.CharField(max_length=100, default='Proecologicos S.A.S')  # Nuevo campo de cliente
 
     def __str__(self):
         return f"{self.producto.nombre_producto} - {self.cantidad}"
+
 

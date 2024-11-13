@@ -20,16 +20,35 @@ class CrearProductoForm(forms.ModelForm):
 from .models import NotaEntrada
 
 # forms.py
+
 from django import forms
 from .models import NotaEntrada
 
 class NotaEntradaForm(forms.ModelForm):
-    producto_nombre = forms.CharField(label="Producto", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Buscar producto...'}))
+    producto_nombre = forms.CharField(
+        label="Producto",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Buscar producto...'
+        })
+    )
+    
+    cliente = forms.CharField(
+        label="Cliente",
+        initial="Proecologicos S.A.S",  # Valor predeterminado
+        widget=forms.TextInput(attrs={
+            'class': 'form-control'
+        })
+    )
 
     class Meta:
         model = NotaEntrada
-        fields = ['producto_nombre', 'cantidad']
+        fields = ['producto_nombre', 'cantidad', 'cliente']
         widgets = {
-            'cantidad': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+            'cantidad': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': 1
+            }),
         }
+
 
