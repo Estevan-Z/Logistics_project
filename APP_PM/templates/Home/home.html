@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>Document</title>
 </head>
 <body>
@@ -19,78 +18,74 @@
                 <a href="{% url 'productos_listado' %}">Listado de productos</a>
             </li>
             <li>
-                <a href="{% url 'agregar_nota_entrada' %}">N ENTRADA</a>
+                <a href="{% url 'agregar_nota_entrada' %}">N entrada</a>
             </li>
-            
             <li>
-                <a href="">CREAR CLIENTE</a>
+                <a href="">Crear cliente</a>
             </li>
         </ul>
-        
     </nav>
 
     <style>
-         .barra_nav {
+        .barra_nav {
             overflow: hidden;
             position: relative;
             width: rem;
             background-color: #333;
             box-shadow: rgb(38, 57, 77) 0px 10px 20px -15px;
             height: 5rem;
-    }
-    
-    .barra_nav a {
-    float: left;
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 20px 24px;
-    text-decoration: none;
-    }
-    
-    .barra_nav a:hover {
-    background-color: #5dec6b;
-    color: black;
-    }
-    
-    ul {
-    list-style: none;
-    }
-    
-    
-    /* Estilo para la barra de navegación y los iconos */
-    .barra_nav {
-        background-color: #5dec6b;
-        padding: 10px; /* Espaciado interno */
-    }
-    
-    .barra_nav ul {
-        list-style: none; /* Elimina los estilos de lista predeterminados */
-        margin: 0;
-        padding: 0;
-        display: flex;
-    }
-    
-    .barra_nav li {
-        margin-right: 1px; /* Espaciado entre elementos de la lista */
-    }
-    
-    
-    
-    .barra_nav ion-icon {
-        margin-right: 1.5px; /* Espaciado entre el icono y el texto */
-        font-size: 18px; /* Tamaño del icono */
-    }
-    body {
-            /* background-color: #fcd6e2; */
+        }
+        
+        .barra_nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 20px 24px;
+            text-decoration: none;
+            
+        }
+        
+        .barra_nav a:hover {
+            background-color: #5dec6b;
+            color: black;
+        }
+        
+        ul {
+            list-style: none;
+        }
+
+        /* Estilo para la barra de navegación y los iconos */
+        .barra_nav {
+            background-color: #5dec6b;
+            padding: 10px; /* Espaciado interno */
+        }
+        
+        .barra_nav ul {
+            list-style: none; /* Elimina los estilos de lista predeterminados */
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        
+        .barra_nav li {
+            margin-right: 1px; /* Espaciado entre elementos de la lista */
+        }
+        
+        .barra_nav ion-icon {
+            margin-right: 1.5px; /* Espaciado entre el icono y el texto */
+            font-size: 18px; /* Tamaño del icono */
+        }
+
+        body {
             background-repeat: no-repeat;
             background-size: cover;
+            text-transform: uppercase; /* Convertir texto a mayúsculas */
             background-attachment: fixed;
-           
         }
     </style>
+
     {% block content %}
     {% endblock %}
-
 </body>
 </html>

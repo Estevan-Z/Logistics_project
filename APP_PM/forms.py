@@ -1,13 +1,16 @@
 from django import forms
 from .models import Crear_producto
 
+# forms.py
+from django import forms
+from .models import Crear_producto
+
 class CrearProductoForm(forms.ModelForm):
     class Meta:
         model = Crear_producto
-        fields = ['nombre_producto', 'grupo',  'unidad', 'marca']
-        labels = {
-        }
+        fields = [ 'nombre_producto', 'linea', 'grupo', 'unidad', 'marca']  # Agregamos el campo 'linea'
         widgets = {
+            'linea': forms.Select(attrs={'class': 'form-control'}),  # Agregar widget para 'linea'
             'grupo': forms.Select(attrs={'class': 'form-control'}),
             'unidad': forms.Select(attrs={'class': 'form-control'}),
             'nombre_producto': forms.TextInput(attrs={'class': 'form-control'}),
