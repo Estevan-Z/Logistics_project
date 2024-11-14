@@ -26,7 +26,7 @@ class NotaEntradaForm(forms.ModelForm):
     
     cliente = forms.CharField(
         label="Cliente",
-        initial="Proecologicos S.A.S", 
+        initial="Proecologicos S.A.S",  # Valor predeterminado
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         })
@@ -34,14 +34,12 @@ class NotaEntradaForm(forms.ModelForm):
 
     class Meta:
         model = NotaEntrada
-        fields = ['cliente', 'producto', 'cantidad', 'fecha']
+        fields = ['producto_nombre', 'cantidad', 'cliente']
         widgets = {
-            'cliente': forms.TextInput(attrs={'class': 'form-control'}),
-            'producto': forms.Select(attrs={'class': 'form-control'}),
-            'cantidad': forms.NumberInput(attrs={'class': 'form-control'}),
-            'fecha': forms.DateInput(
-                attrs={'class': 'form-control', 'type': 'date'}  # Define tipo "date" para mostrar un selector de fecha
-            ),
+            'cantidad': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': 1
+            }),
         }
 
 
