@@ -1,13 +1,8 @@
-# models.py
+
 from django.db import models
+from django.utils import timezone
 import random
 import string
-
-# models.py
-from django.db import models
-import random
-import string
-
 class Crear_producto(models.Model):
     LINEA_OPCIONES = [
         ('insecticidas', 'Insecticidas'),
@@ -56,17 +51,11 @@ class Crear_producto(models.Model):
                 self.id_producto = ''.join(random.choices(string.digits, k=10))
         super(Crear_producto, self).save(*args, **kwargs)
 
-
-
-
-
-#NOTA DE ENTRADA
 class NotaEntrada(models.Model):
+    fecha = models.DateField(default=timezone.now)  # Fecha actual por defecto
+    cliente = models.CharField(max_length=100, default='Proecologicos S.A.S')  # Campo de cliente
     producto = models.ForeignKey(Crear_producto, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField()
-    cliente = models.CharField(max_length=100, default='Proecologicos S.A.S')  # Nuevo campo de cliente
 
     def __str__(self):
         return f"{self.producto.nombre_producto} - {self.cantidad}"
-
-

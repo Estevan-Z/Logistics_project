@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
     <title>Document</title>
 </head>
 <body>
@@ -18,7 +20,7 @@
                 <a href="{% url 'productos_listado' %}">Listado de productos</a>
             </li>
             <li>
-                <a href="{% url 'agregar_nota_entrada' %}">N </a>
+                <a href="{% url 'agregar_nota_entrada' %}">N Entrada</a>
             </li>
             <li>
                 <a href="">Crear cliente</a>
@@ -82,6 +84,9 @@
             background-size: cover;
             text-transform: uppercase; /* Convertir texto a mayúsculas */
             background-attachment: fixed;
+        }
+        button, input{
+            text-transform: uppercase; /* Convertir texto a mayúsculas */
         }
     </style>
 

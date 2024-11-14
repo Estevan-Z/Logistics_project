@@ -3,61 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar Nota de Entrada</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Nota de Entrada</title>
+    
+    <!-- Extiende la plantilla base -->
+    {% extends 'Home/home.html' %}
+    {% block content %}
+
+
     <style>
-        /* Estilos personalizados */
         body {
             background-color: #f8f9fa;
         }
         .container {
             max-width: 800px;
             margin-top: 50px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         h2, h3 {
             color: #343a40;
-        }
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: none;
+            font-weight: bold;
         }
         .btn-primary {
             background-color: #007bff;
             border-color: #007bff;
         }
-        .table {
-            margin-top: 20px;
+        .table thead {
+            background-color: #007bff;
+            color: #ffffff;
         }
-        .ui-autocomplete {
-            max-height: 200px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            background-color: #ffffff;
-            border: 1px solid #ced4da;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 0;
-            border-radius: 0.25rem;
+        .divider {
+            height: 2px;
+            background-color: #007bff;
+            margin: 40px 0;
         }
         .ui-menu-item-wrapper {
-            padding: 10px;
-            font-size: 16px;
-            color: #495057;
+            padding: 8px;
+            font-size: 14px;
+            color: #333333;
         }
         .ui-menu-item-wrapper:hover {
             background-color: #007bff;
-            color: #ffffff;
+            color: white;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 class="text-center">Agregar Producto a Nota de Entrada</h2>
+    <h2 class="text-center">Nota de Entrada</h2>
     
     <!-- Formulario -->
     <form method="post" class="mt-4">
         {% csrf_token %}
+        <div class="form-group">
+            {{ form.fecha.label_tag }}
+            {{ form.fecha }}
+        </div>  
         <div class="form-group">
             {{ form.cliente.label_tag }}
             {{ form.cliente }}
@@ -74,10 +78,13 @@
         <button type="submit" class="btn btn-primary btn-block">Guardar</button>
     </form>
 
+    <!-- Divisor horizontal -->
+    <div class="divider"></div>
+
     <!-- Tabla de Productos -->
     <h3 class="text-center mt-5">Productos en la Nota de Entrada</h3>
     <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
+        <thead>
             <tr>
                 <th>ID</th>
                 <th>Producto</th>
@@ -132,3 +139,4 @@ $(function() {
 
 </body>
 </html>
+{% endblock %}

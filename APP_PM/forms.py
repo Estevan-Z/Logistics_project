@@ -1,32 +1,20 @@
 from django import forms
-from .models import Crear_producto
+from .models import Crear_producto,NotaEntrada
 
-# forms.py
-from django import forms
-from .models import Crear_producto
-
+#CREAR PRODUCTOS
 class CrearProductoForm(forms.ModelForm):
     class Meta:
         model = Crear_producto
-        fields = [ 'nombre_producto', 'linea', 'grupo', 'unidad', 'marca']  # Agregamos el campo 'linea'
+        fields = [ 'nombre_producto', 'linea', 'grupo', 'unidad', 'marca']  
         widgets = {
-            'linea': forms.Select(attrs={'class': 'form-control'}),  # Agregar widget para 'linea'
+            'linea': forms.Select(attrs={'class': 'form-control'}),  
             'grupo': forms.Select(attrs={'class': 'form-control'}),
             'unidad': forms.Select(attrs={'class': 'form-control'}),
             'nombre_producto': forms.TextInput(attrs={'class': 'form-control'}),
             'marca': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-
-# forms.py
-
-from .models import NotaEntrada
-
-# forms.py
-
-from django import forms
-from .models import NotaEntrada
-
+# NOTA ENTRADAS
 class NotaEntradaForm(forms.ModelForm):
     producto_nombre = forms.CharField(
         label="Producto",
@@ -38,7 +26,7 @@ class NotaEntradaForm(forms.ModelForm):
     
     cliente = forms.CharField(
         label="Cliente",
-        initial="Proecologicos S.A.S",  # Valor predeterminado
+        initial="Proecologicos S.A.S", 
         widget=forms.TextInput(attrs={
             'class': 'form-control'
         })
@@ -46,12 +34,14 @@ class NotaEntradaForm(forms.ModelForm):
 
     class Meta:
         model = NotaEntrada
-        fields = ['producto_nombre', 'cantidad', 'cliente']
+        fields = ['cliente', 'producto', 'cantidad', 'fecha']
         widgets = {
-            'cantidad': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'min': 1
-            }),
+            'cliente': forms.TextInput(attrs={'class': 'form-control'}),
+            'producto': forms.Select(attrs={'class': 'form-control'}),
+            'cantidad': forms.NumberInput(attrs={'class': 'form-control'}),
+            'fecha': forms.DateInput(
+                attrs={'class': 'form-control', 'type': 'date'}  # Define tipo "date" para mostrar un selector de fecha
+            ),
         }
 
 
