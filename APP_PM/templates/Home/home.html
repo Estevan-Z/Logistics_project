@@ -3,94 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
-    <title>Document</title>
+    <title>{% block title %}Mi Sitio{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 <body>
-    <nav class="barra_nav">
-        <ul>
-            <li>
-                <a href="{% url 'home' %}"><ion-icon name="home"></ion-icon>Inicio</a>
-            </li>
-            <li>
-                <a href="{% url 'crear_producto' %}"><ion-icon name="home"></ion-icon>Crear Producto</a>
-            </li>
-            <li>
-                <a href="{% url 'productos_listado' %}">Listado de productos</a>
-            </li>
-            <li>
-                <a href="{% url 'agregar_nota_entrada' %}">N Entrada</a>
-            </li>
-            <li>
-                <a href="">Crear cliente</a>
-            </li>
-        </ul>
-    </nav>
+    <div class="wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="ri-code-s-slash-line"></i>
+                    <span>Mi Sistema</span>
+                </div>
+                <button id="toggle-sidebar" class="toggle-btn">
+                    <i class="ri-menu-fold-line"></i>
+                </button>
+                <div class="search-box">
+                    <i class="ri-search-line"></i>
+                    <input type="text" placeholder="Buscar...">
+                </div>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li class="menu-header">Menu</li>
+                <li class="menu-item {% if request.path == '/' %}active{% endif %}">
+                    <a href="{% url 'home' %}">
+                        <i class="ri-home-line"></i>
+                        <span>Inicio</span>
+                    </a>
+                </li>
+                <li class="menu-item {% if 'crear_producto' in request.path %}active{% endif %}">
+                    <a href="{% url 'crear_producto' %}">
+                        <i class="ri-add-circle-line"></i>
+                        <span>Crear Producto</span>
+                    </a>
+                </li>
+                <li class="menu-item {% if 'productos_listado' in request.path %}active{% endif %}">
+                    <a href="{% url 'productos_listado' %}">
+                        <i class="ri-list-check"></i>
+                        <span>Listado de productos</span>
+                    </a>
+                </li>
+                <li class="menu-item {% if 'agregar_nota_entrada' in request.path %}active{% endif %}">
+                    <a href="{% url 'agregar_nota_entrada' %}">
+                        <i class="ri-file-list-line"></i>
+                        <span>N Entrada</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#">
+                        <i class="ri-user-add-line"></i>
+                        <span>Crear cliente</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="theme-toggle">
+                <button id="theme-toggle">
+                    <i class="ri-sun-line"></i>
+                    <span>Cambiar tema</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="content">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
 
     <style>
-        .barra_nav {
-            overflow: hidden;
-            position: relative;
-            width: rem;
-            background-color: #333;
-            box-shadow: rgb(38, 57, 77) 0px 10px 20px -15px;
-            height: 5rem;
-        }
-        
-        .barra_nav a {
-            float: left;
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 20px 24px;
-            text-decoration: none;
-            
-        }
-        
-        .barra_nav a:hover {
-            background-color: #5dec6b;
-            color: black;
-        }
-        
-        ul {
-            list-style: none;
+        :root {
+            --primary-color: #5dec6b;
+            --sidebar-width: 260px;
+            --sidebar-collapsed-width: 80px;
+            --header-height: 60px;
+            --sidebar-bg: #1a1a1a;
+            --sidebar-color: #fff;
+            --hover-bg: rgba(93, 236, 107, 0.1);
         }
 
-        /* Estilo para la barra de navegación y los iconos */
-        .barra_nav {
-            background-color: #5dec6b;
-            padding: 10px; /* Espaciado interno */
+        body.light-theme {
+            --sidebar-bg: #ffffff;
+            --sidebar-color: #1a1a1a;
         }
-        
-        .barra_nav ul {
-            list-style: none; /* Elimina los estilos de lista predeterminados */
+
+        * {
             margin: 0;
             padding: 0;
-            display: flex;
-        }
-        
-        .barra_nav li {
-            margin-right: 1px; /* Espaciado entre elementos de la lista */
-        }
-        
-        .barra_nav ion-icon {
-            margin-right: 1.5px; /* Espaciado entre el icono y el texto */
-            font-size: 18px; /* Tamaño del icono */
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
         }
 
         body {
-            background-repeat: no-repeat;
-            background-size: cover;
-            text-transform: uppercase; /* Convertir texto a mayúsculas */
-            background-attachment: fixed;
+            background-color: #f5f5f5;
         }
-        button, input{
-            text-transform: uppercase; /* Convertir texto a mayúsculas */
+
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            color: var(--sidebar-color);
+            height: 100vh;
+            position: fixed;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+
+        .sidebar.collapsed .logo span,
+        .sidebar.collapsed .search-box,
+        .sidebar.collapsed .menu-header,
+        .sidebar.collapsed .menu-item span,
+        .sidebar.collapsed .theme-toggle span {
+            display: none;
+        }
+
+        .sidebar.collapsed .menu-item a {
+            justify-content: center;
+        }
+
+        .sidebar.collapsed .theme-toggle button {
+            justify-content: center;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: transparent;
+            border: none;
+            color: var(--sidebar-color);
+            cursor: pointer;
+            padding: 0.5rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--sidebar-color);
+            width: 100%;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-header {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .menu-item a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            text-decoration: none;
+            color: var(--sidebar-color);
+            border-radius: 6px;
+            margin-bottom: 0.2rem;
+        }
+
+        .menu-item.active a,
+        .menu-item a:hover {
+            background: var(--hover-bg);
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            bottom: 2rem;
+            width: calc(100% - 3rem);
+        }
+
+        .theme-toggle button {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--sidebar-color);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .theme-toggle button:hover {
+            background: var(--hover-bg);
+        }
+
+        .content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            width: calc(100% - var(--sidebar-width));
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed + .content {
+            margin-left: var(--sidebar-collapsed-width);
+            width: calc(100% - var(--sidebar-collapsed-width));
         }
     </style>
 
-    {% block content %}
-    {% endblock %}
+    <script>
+        // Theme toggle
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.body.classList.toggle('light-theme');
+            const icon = this.querySelector('i');
+            if (document.body.classList.contains('light-theme')) {
+                icon.classList.replace('ri-sun-line', 'ri-moon-line');
+            } else {
+                icon.classList.replace('ri-moon-line', 'ri-sun-line');
+            }
+        });
+
+        // Sidebar collapse toggle
+        document.getElementById('toggle-sidebar').addEventListener('click', function() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('collapsed');
+            const icon = this.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.classList.replace('ri-menu-fold-line', 'ri-menu-unfold-line');
+            } else {
+                icon.classList.replace('ri-menu-unfold-line', 'ri-menu-fold-line');
+            }
+        });
+    </script>
 </body>
 </html>
