@@ -11,6 +11,7 @@ urlpatterns = [
     
     path('agregar_nota_entrada/', views.agregar_nota_entrada, name='agregar_nota_entrada'),
     path('buscar_producto/', views.buscar_producto, name='buscar_producto'),
+    path('insertar-productos/', views.insertar_productos, name='insertar_productos'),
 
 
 

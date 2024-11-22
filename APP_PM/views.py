@@ -1,6 +1,8 @@
+import pandas as pd
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CrearProductoForm
+from .forms import CrearProductoForm, InsertarProductosForm
 from .models import Crear_producto
+from django.contrib import messages
 
 def home(request):
     return render(request, 'Home/home.html')
@@ -87,4 +89,52 @@ def buscar_producto(request):
     return JsonResponse([], safe=False)
 
 
+def insertar_productos(request):
+    if request.method == "POST":
+        form = InsertarProductosForm(request.POST, request.FILES)
+        if form.is_valid():
+            archivo_modelo = form.save()  # Guarda la referencia del archivo en la base de datos
+            file = archivo_modelo.archivo  # Accede al archivo
 
+            try:
+                # Leer el archivo Excel
+                data = pd.read_excel(file)
+
+                # Validar columnas esperadas
+                expected_columns = ['nombre_producto', 'linea', 'grupo', 'marca']
+                if not all(col in data.columns for col in expected_columns):
+                    messages.error(request, f"El archivo debe contener las columnas: {', '.join(expected_columns)}.")
+                    return redirect('insertar_productos')
+
+                # Crear productos a partir del archivo Excel
+                for _, row in data.iterrows():
+                    # Validar valores antes de crear los productos
+                    if row['linea'] not in dict(Crear_producto.LINEA_OPCIONES):
+                        messages.warning(request, f"Valor inválido en columna 'linea': {row['linea']}. Producto omitido.")
+                        continue
+                    if row['grupo'] not in dict(Crear_producto.GRUPO_OPCIONES):
+                        messages.warning(request, f"Valor inválido en columna 'grupo': {row['grupo']}. Producto omitido.")
+                        continue
+
+                    # Crear el producto
+                    Crear_producto.objects.create(
+                        nombre_producto=row['nombre_producto'],
+                        linea=row['linea'],
+                        grupo=row['grupo'],
+                        marca=row['marca']
+                    )
+                
+                # Marcar el archivo como procesado
+                archivo_modelo.procesado = True
+                archivo_modelo.save()
+
+                messages.success(request, "Los productos fueron insertados exitosamente.")
+                return redirect('insertar_productos')
+
+            except Exception as e:
+                messages.error(request, f"Error al procesar el archivo: {e}")
+                return redirect('insertar_productos')
+    else:
+        form = InsertarProductosForm()
+
+    return render(request, 'Productos/insertar_productos.html', {'form': form})

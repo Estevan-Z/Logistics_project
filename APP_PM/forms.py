@@ -1,18 +1,27 @@
 from django import forms
-from .models import Crear_producto,NotaEntrada
+from .models import Crear_producto,NotaEntrada, InsertarProductos
 
 #CREAR PRODUCTOS
 class CrearProductoForm(forms.ModelForm):
     class Meta:
         model = Crear_producto
-        fields = [ 'nombre_producto', 'linea', 'grupo', 'unidad', 'marca']  
+        fields = [ 'nombre_producto', 'linea', 'grupo',  'marca']  
         widgets = {
             'linea': forms.Select(attrs={'class': 'form-control'}),  
             'grupo': forms.Select(attrs={'class': 'form-control'}),
-            'unidad': forms.Select(attrs={'class': 'form-control'}),
             'nombre_producto': forms.TextInput(attrs={'class': 'form-control'}),
             'marca': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+#INSERTAR PRODUCTOS
+class InsertarProductosForm(forms.ModelForm):
+    class Meta:
+        model = InsertarProductos
+        fields = ['archivo']
+        widgets = {
+            'archivo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+
 
 # NOTA ENTRADAS
 class NotaEntradaForm(forms.ModelForm):

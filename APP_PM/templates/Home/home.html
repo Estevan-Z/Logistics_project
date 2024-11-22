@@ -37,6 +37,12 @@
                         <span>Crear Producto</span>
                     </a>
                 </li>
+                <li class="menu-item {% if 'crear_producto' in request.path %}active{% endif %}">
+                    <a href="{% url 'insertar_productos' %}">
+                        <i class="ri-add-circle-line"></i>
+                        <span>insertar productos</span>
+                    </a>
+                </li>
                 <li class="menu-item {% if 'productos_listado' in request.path %}active{% endif %}">
                     <a href="{% url 'productos_listado' %}">
                         <i class="ri-list-check"></i>
@@ -56,7 +62,7 @@
                     </a>
                 </li>
             </ul>
-
+            
             <div class="theme-toggle">
                 <button id="theme-toggle">
                     <i class="ri-sun-line"></i>
