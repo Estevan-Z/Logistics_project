@@ -93,8 +93,8 @@ def insertar_productos(request):
     if request.method == "POST":
         form = InsertarProductosForm(request.POST, request.FILES)
         if form.is_valid():
-            archivo_modelo = form.save()  # Guarda la referencia del archivo en la base de datos
-            file = archivo_modelo.archivo  # Accede al archivo
+            archivo_modelo = form.save()
+            file = archivo_modelo.archivo
 
             try:
                 # Leer el archivo Excel
@@ -106,9 +106,12 @@ def insertar_productos(request):
                     messages.error(request, f"El archivo debe contener las columnas: {', '.join(expected_columns)}.")
                     return redirect('insertar_productos')
 
-                # Crear productos a partir del archivo Excel
+                # Convertir valores de 'linea' y 'grupo' a formato esperado
+                data['linea'] = data['linea'].apply(lambda x: f"{int(x):03}")  # Convertir a '001', '002', etc.
+                data['grupo'] = data['grupo'].apply(lambda x: f"{int(x):03}")
+
+                # Validar y crear productos
                 for _, row in data.iterrows():
-                    # Validar valores antes de crear los productos
                     if row['linea'] not in dict(Crear_producto.LINEA_OPCIONES):
                         messages.warning(request, f"Valor inválido en columna 'linea': {row['linea']}. Producto omitido.")
                         continue
@@ -116,15 +119,14 @@ def insertar_productos(request):
                         messages.warning(request, f"Valor inválido en columna 'grupo': {row['grupo']}. Producto omitido.")
                         continue
 
-                    # Crear el producto
+                    # Crear producto
                     Crear_producto.objects.create(
                         nombre_producto=row['nombre_producto'],
                         linea=row['linea'],
                         grupo=row['grupo'],
                         marca=row['marca']
                     )
-                
-                # Marcar el archivo como procesado
+
                 archivo_modelo.procesado = True
                 archivo_modelo.save()
 
@@ -138,3 +140,4 @@ def insertar_productos(request):
         form = InsertarProductosForm()
 
     return render(request, 'Productos/insertar_productos.html', {'form': form})
+
