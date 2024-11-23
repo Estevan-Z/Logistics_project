@@ -93,7 +93,7 @@ def insertar_productos(request):
     if request.method == "POST":
         form = InsertarProductosForm(request.POST, request.FILES)
         if form.is_valid():
-            archivo_modelo = form.save()
+            archivo_modelo = form.save()  # Guarda el archivo
             file = archivo_modelo.archivo
 
             try:
@@ -106,27 +106,45 @@ def insertar_productos(request):
                     messages.error(request, f"El archivo debe contener las columnas: {', '.join(expected_columns)}.")
                     return redirect('insertar_productos')
 
-                # Convertir valores de 'linea' y 'grupo' a formato esperado
-                data['linea'] = data['linea'].apply(lambda x: f"{int(x):03}")  # Convertir a '001', '002', etc.
-                data['grupo'] = data['grupo'].apply(lambda x: f"{int(x):03}")
+                # Diccionarios para convertir nombres a códigos (convertimos claves y valores a minúsculas)
+                linea_dict = {k.lower(): v for k, v in dict(Crear_producto.LINEA_OPCIONES).items()}
+                grupo_dict = {k.lower(): v for k, v in dict(Crear_producto.GRUPO_OPCIONES).items()}
 
-                # Validar y crear productos
-                for _, row in data.iterrows():
-                    if row['linea'] not in dict(Crear_producto.LINEA_OPCIONES):
-                        messages.warning(request, f"Valor inválido en columna 'linea': {row['linea']}. Producto omitido.")
+                # Invertir los diccionarios para buscar por nombre (también insensible a mayúsculas)
+                linea_dict_invertido = {v.lower(): k for k, v in linea_dict.items()}
+                grupo_dict_invertido = {v.lower(): k for k, v in grupo_dict.items()}
+
+                # Convertir valores de 'linea' y 'grupo'
+                for index, row in data.iterrows():
+                    # Convertir línea
+                    linea_value = str(row['linea']).lower()  # Convertir valor a minúsculas
+                    if linea_value in linea_dict:  # Si ya es un código
+                        linea_code = linea_value
+                    elif linea_value in linea_dict_invertido:  # Si es un nombre
+                        linea_code = linea_dict_invertido[linea_value]
+                    else:
+                        messages.warning(request, f"Valor inválido en columna 'linea' en la fila {index + 2}: {row['linea']}. Producto omitido.")
                         continue
-                    if row['grupo'] not in dict(Crear_producto.GRUPO_OPCIONES):
-                        messages.warning(request, f"Valor inválido en columna 'grupo': {row['grupo']}. Producto omitido.")
+
+                    # Convertir grupo
+                    grupo_value = str(row['grupo']).lower()  # Convertir valor a minúsculas
+                    if grupo_value in grupo_dict:  # Si ya es un código
+                        grupo_code = grupo_value
+                    elif grupo_value in grupo_dict_invertido:  # Si es un nombre
+                        grupo_code = grupo_dict_invertido[grupo_value]
+                    else:
+                        messages.warning(request, f"Valor inválido en columna 'grupo' en la fila {index + 2}: {row['grupo']}. Producto omitido.")
                         continue
 
                     # Crear producto
                     Crear_producto.objects.create(
                         nombre_producto=row['nombre_producto'],
-                        linea=row['linea'],
-                        grupo=row['grupo'],
+                        linea=linea_code,
+                        grupo=grupo_code,
                         marca=row['marca']
                     )
 
+                # Marcar el archivo como procesado
                 archivo_modelo.procesado = True
                 archivo_modelo.save()
 
@@ -140,4 +158,5 @@ def insertar_productos(request):
         form = InsertarProductosForm()
 
     return render(request, 'Productos/insertar_productos.html', {'form': form})
+
 

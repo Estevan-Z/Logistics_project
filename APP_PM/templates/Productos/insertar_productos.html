@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Insertar Productos</title>
+    {% extends 'Home/home.html' %}
+    {% load static %} 
+    {% block content %}
 </head>
 <body>
     <h1>Subir Archivo Excel para Insertar Productos</h1>
+    <a href="{% static 'plantillas/plantilla_productos.xlsx' %}" download class="btn btn-secondary">
+        Descargar Plantilla
+    </a>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
@@ -14,6 +20,115 @@
     </form>
     {% for message in messages %}
         <p>{{ message }}</p>
-    {% endfor %}    
+    {% endfor %}  
+    
+    <style>
+
+.btn-secondary {
+    background: #5d9cec;
+    border: none;
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    transition: background 0.3s ease;
+    text-align: center;
+    width: 100%;
+    max-width: 200px;
+}
+
+.btn-secondary:hover {
+    background: #417dc1;
+}
+
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+    
+        h1 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+    
+        form {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+    
+        form p {
+            margin-bottom: 1rem;
+        }
+    
+        form label {
+            font-weight: bold;
+            color: var(--sidebar-bg);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+    
+        form input[type="file"] {
+            display: block;
+            padding: 0.5rem;
+            border: 1px solid var(--primary-color);
+            border-radius: 4px;
+            width: 100%;
+            margin-bottom: 1rem;
+            outline: none;
+            transition: border 0.3s ease;
+        }
+    
+        form input[type="file"]:focus {
+            border-color: #3cb371;
+            box-shadow: 0 0 0 3px rgba(93, 236, 107, 0.2);
+        }
+    
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            color: #fff;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+    
+        .btn-primary:hover {
+            background: #3cb371;
+        }
+    
+        p {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+    
+        .messages {
+            margin-top: 1.5rem;
+            color: #d9534f;
+        }
+    </style>
+    
 </body>
 </html>
+{% endblock %}
