@@ -10,19 +10,69 @@
     <title>Insertar Productos</title>
 </head>
 <body>
-    <h1>Subir Archivo Excel para Insertar Productos</h1>
-    <a href="{% static 'plantillas/plantilla_productos.xlsx' %}" download class="btn btn-secondary">
-        Descargar Plantilla
-    </a>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Subir</button>
-    </form>
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %}  
-    
+    <div class="container">
+        <h1>Subir Archivo Excel para Insertar Productos</h1>
+        <a href="{% static 'plantillas/plantilla_productos.xlsx' %}" download class="btn btn-secondary">
+            Descargar Plantilla
+        </a>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Subir</button>
+        </form>
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}  
+    </div>
+    <script>
+    // Esperamos a que el DOM se cargue completamente
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form'); // Seleccionamos el formulario
+        const submitButton = form.querySelector('button[type="submit"]'); // El botón de "Subir"
+
+        submitButton.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevenimos el comportamiento por defecto del botón (evitar el submit inmediato)
+
+            // Mostrar la alerta
+            let timerInterval;
+            Swal.fire({
+                title: "Subiendo productos...",
+                html: "Los productos se están subiendo, por favor espere.",
+                timer: 0, // No cerramos automáticamente la alerta
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading();
+                    const timer = Swal.getPopup().querySelector("b");
+                    timerInterval = setInterval(() => {
+                        // Esta parte actualiza el temporizador en la alerta
+                        timer.textContent = `${Swal.getTimerLeft()}`;
+                    }, 100);
+                },
+                willClose: () => {
+                    clearInterval(timerInterval); // Limpiamos el intervalo cuando la alerta se cierra
+                }
+            });
+
+            // Ahora enviamos el formulario de manera manual
+            form.submit();
+        });
+    });
+</script>
+
+    {% if messages %}
+        <script>
+            {% for message in messages %}
+                Swal.fire({
+                    icon: "{% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}",
+                    title: "{{ message.level_tag|capfirst }}",
+                    text: "{{ message }}",
+                    timer: 5000,  // Muestra la alerta durante 5 segundos
+                    timerProgressBar: true
+                });
+            {% endfor %}
+        </script>
+    {% endif %}
+ 
 </body>
 </html>
 {% endblock %}

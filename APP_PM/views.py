@@ -89,6 +89,12 @@ def buscar_producto(request):
     return JsonResponse([], safe=False)
 
 
+import pandas as pd
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from .forms import InsertarProductosForm
+from .models import Crear_producto
+
 def insertar_productos(request):
     if request.method == "POST":
         form = InsertarProductosForm(request.POST, request.FILES)
@@ -97,6 +103,11 @@ def insertar_productos(request):
             file = archivo_modelo.archivo
 
             try:
+                # Validar el tipo de archivo
+                if not file.name.endswith('.xlsx'):
+                    messages.error(request, "El archivo debe ser un archivo de Excel (.xlsx).")
+                    return redirect('insertar_productos')
+
                 # Leer el archivo Excel
                 data = pd.read_excel(file)
 
@@ -149,7 +160,7 @@ def insertar_productos(request):
                 archivo_modelo.save()
 
                 messages.success(request, "Los productos fueron insertados exitosamente.")
-                return redirect('insertar_productos')
+                return redirect('insertar_productos')   
 
             except Exception as e:
                 messages.error(request, f"Error al procesar el archivo: {e}")
@@ -158,5 +169,6 @@ def insertar_productos(request):
         form = InsertarProductosForm()
 
     return render(request, 'Productos/insertar_productos.html', {'form': form})
+
 
 

@@ -19,14 +19,14 @@ class Crear_producto(models.Model):
     ]
 
     GRUPO_OPCIONES = [
-        ('001', 'Bifungicidas'),
+        ('001', 'Biofungicidas'),
         ('002', 'Comercializacion de productos'),
         ('003', 'Materia Prima'),
         ('004', 'Fertilizantes'),
         ('005', 'Foliares'),
         ('006', 'Granulados'),
         ('007', 'Insumos'),
-        ('008', 'Líquido'),
+        ('008', 'Liquido'),
         ('009', 'Organicos'),
         ('010', 'Polvo'),
         ('011', 'Productos fabricados - No Propios'),

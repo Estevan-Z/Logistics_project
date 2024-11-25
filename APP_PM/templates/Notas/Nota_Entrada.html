@@ -6,56 +6,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/Nota_entrada.css' %}">
     <title>Agregar Nota de Entrada</title>
 </head>
 <body>
     
 <div class="container">
-    <h2 class="text-center">Agregar Producto a Nota de Entrada</h2>
-    
-    <!-- Formulario -->
-    <form method="post" class="mt-4">
-        {% csrf_token %}
-        <div class="form-group">
-            {{ form.cliente.label_tag }}
-            {{ form.cliente }}
-        </div>
-        <div class="form-group">
-            {{ form.producto_nombre.label_tag }}
-            {{ form.producto_nombre }}
-            <input type="hidden" id="producto-id" name="producto_id">
-        </div>
-        <div class="form-group">
-            {{ form.cantidad.label_tag }}
-            {{ form.cantidad }}
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">Guardar</button>
-    </form>
+   
+        <h2>Agregar Producto a Nota de Entrada</h2>
+        
+        <!-- Formulario -->
+        <form method="post">
+            {% csrf_token %}
+            <div>
+                {{ form.cliente.label_tag }}
+                {{ form.cliente }}
+            </div>
+            <div>
+                {{ form.producto_nombre.label_tag }}
+                {{ form.producto_nombre }}
+                <input type="hidden" id="producto-id" name="producto_id">
+            </div>
+            <div>
+                {{ form.cantidad.label_tag }}
+                {{ form.cantidad }}
+            </div>
+            <button type="submit">Guardar</button>
+        </form>
 
-    <!-- Tabla de Productos -->
-    <h3 class="text-center mt-5">Productos en la Nota de Entrada</h3>
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th>ID</th>
-                <th>Producto</th>
-                <th>Unidad</th>
-                <th>Cantidad</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for nota in notas %}
-            <tr>
-                <td>{{ nota.producto.id_producto }}</td>
-                <td>{{ nota.producto.nombre_producto }}</td>
-                <td>{{ nota.producto.unidad }}</td>
-                <td>{{ nota.cantidad }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <!-- Tabla de Productos -->
+        <h3>Productos en la Nota de Entrada</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Unidad</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for nota in notas %}
+                <tr>
+                    <td>{{ nota.producto.id_producto }}</td>
+                    <td>{{ nota.producto.nombre_producto }}</td>
+                    <td>{{ nota.producto.unidad }}</td>
+                    <td>{{ nota.cantidad }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 </div>
 
 <!-- jQuery and jQuery UI for Autocomplete -->
