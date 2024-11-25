@@ -1,0 +1,51 @@
+.container {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+.details {
+    font-size: 18px;
+    line-height: 1.6;
+}
+.details .label {
+    font-weight: bold;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+.button-container a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    color: #fff;
+    text-decoration: none;
+    font-size: 24px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+.button-container a.green {
+    background-color: #4CAF50; /* Verde para el icono de chulo */
+}
+.button-container a.blue {
+    background-color: #2196F3; /* Azul para el icono de + */
+}
+.button-container a.red {
+    background-color: #ec3333; /* Rojo para el icono de lápiz */
+}
+.button-container i {
+    color: #fff;
+}
