@@ -26,14 +26,27 @@ def productos_creados(request, producto_id):
     return render(request, 'Productos/productos_creados.html', {'producto': producto})
 
 def productos_listado(request):
-    query = request.GET.get('q')
-    if query:
-        productos = Crear_producto.objects.filter(nombre_producto__icontains=query)
-    else:
-        productos = Crear_producto.objects.all()
-    
-    return render(request, 'Productos/productos_listado.html', {'productos': productos})
+    # Recuperar los parámetros de búsqueda y filtro
+    query = request.GET.get('q')  # Parámetro de búsqueda
+    filtro_marca = request.GET.get('marca')  # Parámetro de filtro por marca
 
+    # Consultar productos
+    productos = Crear_producto.objects.all()
+
+    # Aplicar filtros
+    if query:
+        productos = productos.filter(nombre_producto__icontains=query)  # Búsqueda por nombre
+    if filtro_marca:
+        productos = productos.filter(marca=filtro_marca)  # Filtro por marca
+
+    # Obtener todas las marcas para los botones dinámicos
+    marcas = Crear_producto.objects.values_list('marca', flat=True).distinct()
+
+    # Renderizar la plantilla
+    return render(request, 'Productos/productos_listado.html', {
+        'productos': productos,
+        'marcas': marcas
+    })
 def editar_producto(request, producto_id):
     producto = get_object_or_404(Crear_producto, id_producto=producto_id)
     
@@ -76,6 +89,7 @@ def agregar_nota_entrada(request):
 
     notas = NotaEntrada.objects.all()
     return render(request, 'Notas/Nota_Entrada.html', {'form': form, 'notas': notas})
+
 
 # views.py
 from django.http import JsonResponse

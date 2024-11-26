@@ -59,10 +59,11 @@ class InsertarProductos(models.Model):
         return f"Archivo {self.archivo.name} - {'Procesado' if self.procesado else 'Pendiente'}"
 
 class NotaEntrada(models.Model):
-    producto = models.ForeignKey(Crear_producto, on_delete=models.CASCADE)
-    cantidad = models.PositiveIntegerField()
-    observaciones = models.TextField(blank=True, null=True)
-    cliente = models.CharField(max_length=100, default='Proecologicos S.A.S')  # Nuevo campo de cliente
+    producto = models.ForeignKey('Crear_producto', on_delete=models.CASCADE)  # Relación con el producto
+    cantidad = models.PositiveIntegerField()  # Cantidad de producto ingresada
+    lote = models.CharField(max_length=100, default='')   # Número de lote del producto
+    fecha_vencimiento = models.DateField(null=True, blank=True) # Fecha de vencimiento del producto
+    cliente = models.CharField(max_length=100, default='Proecologicos S.A.S')  # Nombre del cliente, valor predeterminado
 
     def __str__(self):
-        return f"{self.producto.nombre_producto} - {self.cantidad}"
+        return f"{self.producto.nombre_producto} - {self.cantidad} - Lote: {self.lote}"

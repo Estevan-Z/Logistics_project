@@ -6,9 +6,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/Productos_lista.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>Productos</title>
+</head>
+<body>
+    <style>
+        
+        h2 {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 2rem;
+}
+
+/* Filter Button Styling */
+.filter-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.marca-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.marca-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.mostrar-todos {
+    background-color: #28a745; /* Verde */
+}
+
+.mostrar-todos:hover {
+    background-color: #218838;
+}
+
+/* Marcas Buttons Styling */
+#marcas-container {
+    margin-top: 10px;
+    display: none; /* Ocultar inicialmente */
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Search Bar Styling */
+.search-bar {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.search-bar input[type="text"] {
+    width: 70%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
+}
+
+.search-bar input[type="text"]:focus {
+    border-color: #007BFF;
+}
+
+.search-bar button {
+    padding: 10px 25px;
+    font-size: 16px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    border-radius: 25px;
+    margin-left: 10px;
+    transition: all 0.2s ease-in-out;
+}
+
+.search-bar button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+th {
+    background-color: #007BFF;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Action Buttons Styling */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.button-container a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    transition: all 0.3s ease-in-out;
+}
+
+.button-container a.green {
+    background-color: #28a745;
+}
+
+.button-container a.green:hover {
+    background-color: #218838;
+}
+
+.button-container a.red {
+    background-color: #dc3545;
+}
+
+.button-container a.red:hover {
+    background-color: #c82333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .search-bar input[type="text"] {
+        width: 90%;
+    }
+
+    table, th, td {
+        font-size: 12px;
+    }
+
+    .button-container a {
+        width: 35px;
+        height: 35px;
+        line-height: 35px;
+        font-size: 14px;
+    }
+}
+    </style>
+
+    <div class="container">
+        <h2>Gestión de Productos</h2>
+
+        <!-- Botones de marcas -->
+        <div class="filter-container">
+            <button id="toggle-marcas" class="marca-button mostrar-todos">Seleccionar por Marca</button>
+        </div>
+    
+        <!-- Botones de marcas (inicialmente ocultos) -->
+        <div class="marcas-container" id="marcas-container" style="display: none;">
+            <a href="{% url 'productos_listado' %}" class="marca-button mostrar-todos">Mostrar todos</a>
+            {% for marca in marcas %}
+                <a href="?marca={{ marca }}&q={{ request.GET.q }}" class="marca-button">{{ marca }}</a>
+            {% endfor %}
+        </div>
+
+        <!-- Barra de búsqueda -->
+        <div class="search-bar">
+            <form method="GET" action="{% url 'productos_listado' %}">
+                <input type="text" name="q" placeholder="Buscar productos..." value="{{ request.GET.q }}">
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
+
+        <!-- Tabla de productos -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Línea</th>
+                    <th>Grupo</th>
+                    <th>Marca</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.id_producto }}</td>
+                    <td>{{ producto.nombre_producto }}</td>
+                    <td>{{ producto.linea }}</td>
+                    <td>{{ producto.grupo }}</td>
+                    <td>{{ producto.marca }}</td>
+                    <td>
+                        <div class="button-container">
+                            <a href="{% url 'editar_producto' producto.id_producto %}" class="green"><i class="fas fa-edit"></i></a>
+                            <a href="{% url 'eliminar_producto' producto.id_producto %}" onclick="event.preventDefault(); confirmarEliminacion(this.href);" class="red"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">No hay productos que coincidan con la búsqueda.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleButton = document.getElementById('toggle-marcas');
+            const marcasContainer = document.getElementById('marcas-container');
+    
+            toggleButton.addEventListener('click', function () {
+                // Alternar visibilidad
+                if (marcasContainer.style.display === 'none' || marcasContainer.style.display === '') {
+                    marcasContainer.style.display = 'flex'; // Mostrar marcas
+                    toggleButton.textContent = 'Ocultar opciones de Marca'; // Cambiar texto del botón
+                } else {
+                    marcasContainer.style.display = 'none'; // Ocultar marcas
+                    toggleButton.textContent = 'Seleccionar por Marca'; // Cambiar texto del botón
+                }
+            });
+        });
+    </script>
+    
 
     <script>
         function confirmarEliminacion(url) {
@@ -23,58 +278,11 @@
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Redirige a la URL de eliminación
                     window.location.href = url;
                 }
             });
         }
     </script>
-</head>
-<body>
-    <div class="container">
-        <h2>Productos Creados</h2>
-
-        <div class="search-bar">
-            <form method="GET" action="{% url 'productos_listado' %}">
-                <input type="text" name="q" placeholder="Buscar productos..." value="{{ request.GET.q }}">
-                <button type="submit">Buscar</button>
-            </form>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Linea</th>
-                    <th>Grupo</th>
-                    <th>Marca</th>
-                    <th>Editar / Eliminar</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for producto in productos %}
-                <tr>
-                    <td>{{ producto.id_producto }}</td>
-                    <td>{{ producto.nombre_producto }}</td>
-                    <td>{{ producto.linea }}</td>
-                    <td>{{ producto.grupo }}</td>
-                    <td>{{ producto.marca }}</td>
-                    <td>
-                        <div class="button-container">
-                            <a href="{% url 'editar_producto' producto.id_producto %}" class="green"><i class="fa fa-pencil"></i></a>
-                            <a href="{% url 'eliminar_producto' producto.id_producto %}" onclick="event.preventDefault(); confirmarEliminacion(this.href);" class="red"><i class="fa fa-trash"></i></a>
-                        </div>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6">No hay productos que coincidan con la búsqueda.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
 </body>
 </html>
 {% endblock %}

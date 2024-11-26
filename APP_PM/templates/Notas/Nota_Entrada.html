@@ -3,16 +3,133 @@
 {% block content %}
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/Nota_entrada.css' %}">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/Nota_entrada.css' %}">
     <title>Agregar Nota de Entrada</title>
 </head>
 <body>
+    <style>
+
+        .container_Form{
+            max-width: 50%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2, h3 {
+            text-align: center;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        /* Formulario */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        form div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        form input, form select, button[type="submit"] {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        form input:focus, form select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Tabla de productos */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table thead th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Autocomplete */
+        .ui-menu-item-wrapper {
+            padding: 10px;
+            font-size: 1rem;
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            background-color: #fff;
+        }
+
+        .ui-menu-item-wrapper:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            form input, form select, button[type="submit"], table {
+                font-size: 0.9rem;
+            }
+
+            table th, table td {
+                padding: 8px;
+            }
+        }
+
+    
+    </style>
     
 <div class="container">
-   
+    <div class=" container_Form">
         <h2>Agregar Producto a Nota de Entrada</h2>
         
         <!-- Formulario -->
@@ -28,12 +145,22 @@
                 <input type="hidden" id="producto-id" name="producto_id">
             </div>
             <div>
+                {{ form.lote.label_tag }}
+                {{ form.lote }}
+            </div>
+            <div>
+                {{ form.fecha_vencimiento.label_tag }}
+                {{ form.fecha_vencimiento }}
+            </div>
+            
+            <div>
                 {{ form.cantidad.label_tag }}
                 {{ form.cantidad }}
             </div>
             <button type="submit">Guardar</button>
         </form>
-
+    </div>
+    <div class="container_tabla">   
         <!-- Tabla de Productos -->
         <h3>Productos en la Nota de Entrada</h3>
         <table>
@@ -41,8 +168,9 @@
                 <tr>
                     <th>ID</th>
                     <th>Producto</th>
-                    <th>Unidad</th>
                     <th>Cantidad</th>
+                    <th>Lote</th>
+                    <th>Fecha de Vencimiento</th>
                 </tr>
             </thead>
             <tbody>
@@ -50,12 +178,14 @@
                 <tr>
                     <td>{{ nota.producto.id_producto }}</td>
                     <td>{{ nota.producto.nombre_producto }}</td>
-                    <td>{{ nota.producto.unidad }}</td>
                     <td>{{ nota.cantidad }}</td>
+                    <td>{{ nota.lote }}</td>
+                    <td>{{ nota.fecha_vencimiento }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+    </div>
 </div>
 
 <!-- jQuery and jQuery UI for Autocomplete -->
