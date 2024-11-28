@@ -3,6 +3,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CrearProductoForm, InsertarProductosForm
 from .models import Crear_producto
 from django.contrib import messages
+from reportlab.pdfgen import canvas
+from django.http import JsonResponse, HttpResponse
+from io import BytesIO
+from datetime import datetime
 
 def home(request):
     return render(request, 'Home/home.html')
@@ -184,5 +188,43 @@ def insertar_productos(request):
 
     return render(request, 'Productos/insertar_productos.html', {'form': form})
 
+
+def generar_pdf(request):
+    if request.method == "POST":
+        import json
+        data = json.loads(request.body)
+        productos = data.get("productos", [])
+        observacion = data.get("observacion", "")
+        
+        buffer = BytesIO()
+        p = canvas.Canvas(buffer)
+        
+        # Encabezado del PDF
+        p.drawString(100, 800, "Nota de Entrada")
+        p.drawString(100, 780, f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        p.drawString(100, 760, f"Observación: {observacion}")
+        
+        # Tabla de productos
+        y = 740
+        p.drawString(100, y, "ID")
+        p.drawString(150, y, "Producto")
+        p.drawString(300, y, "Lote")
+        p.drawString(400, y, "Fecha Venc.")
+        p.drawString(500, y, "Cantidad")
+        y -= 20
+        
+        for producto in productos:
+            p.drawString(100, y, str(producto["id"]))
+            p.drawString(150, y, producto["nombre"])
+            p.drawString(300, y, producto["lote"])
+            p.drawString(400, y, producto["vencimiento"])
+            p.drawString(500, y, str(producto["cantidad"]))
+            y -= 20
+        
+        # Finaliza el PDF
+        p.save()
+        buffer.seek(0)
+        
+        return HttpResponse(buffer, content_type="application/pdf")
 
 

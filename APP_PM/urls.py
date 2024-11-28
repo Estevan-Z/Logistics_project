@@ -13,6 +13,8 @@ urlpatterns = [
     path('buscar_producto/', views.buscar_producto, name='buscar_producto'),
     path('insertar-productos/', views.insertar_productos, name='insertar_productos'),
 
+    path("generar_pdf/", views.generar_pdf, name="generar_pdf"),
+
 
 
 ]

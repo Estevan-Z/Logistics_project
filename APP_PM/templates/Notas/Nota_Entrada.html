@@ -12,7 +12,7 @@
 </head>
 <body>
     <style>
-
+    
         .container_Form{
             max-width: 50%;
             margin: 20px auto;
@@ -168,9 +168,9 @@
                 <tr>
                     <th>ID</th>
                     <th>Producto</th>
-                    <th>Cantidad</th>
                     <th>Lote</th>
                     <th>Fecha de Vencimiento</th>
+                    <th>Cantidad</th>
                 </tr>
             </thead>
             <tbody>
@@ -178,9 +178,9 @@
                 <tr>
                     <td>{{ nota.producto.id_producto }}</td>
                     <td>{{ nota.producto.nombre_producto }}</td>
-                    <td>{{ nota.cantidad }}</td>
                     <td>{{ nota.lote }}</td>
                     <td>{{ nota.fecha_vencimiento }}</td>
+                    <td>{{ nota.cantidad }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -188,10 +188,34 @@
     </div>
 </div>
 
-<!-- jQuery and jQuery UI for Autocomplete -->
+<!-- Modal para Observaciones -->
+<div class="modal fade" id="modalObservacion" tabindex="-1" role="dialog" aria-labelledby="modalObservacionLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalObservacionLabel">Agregar Observación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formObservacion">
+                    <div class="form-group">
+                        <label for="observacion">Observación:</label>
+                        <textarea id="observacion" class="form-control" rows="4"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" id="guardarObservacion" class="btn btn-primary">Guardar y Generar PDF</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-<!-- Bootstrap JS and Popper.js -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
@@ -219,7 +243,58 @@ $(function() {
     });
 });
 </script>
+<script>
+    document.addEventListener("keydown", function(event) {
+    if (event.key === "F1") {
+        event.preventDefault(); // Evita la función predeterminada del navegador
+        // Muestra el modal
+        $("#modalObservacion").modal("show");
+    }
+});
+document.getElementById("guardarObservacion").addEventListener("click", function() {
+    const observacion = document.getElementById("observacion").value;
+    const productos = [];
+    
+    // Captura los datos de la tabla
+    document.querySelectorAll("table tbody tr").forEach(row => {
+        const columnas = row.querySelectorAll("td");
+        productos.push({
+            id: columnas[0].innerText,
+            nombre: columnas[1].innerText,
+            lote: columnas[2].innerText,
+            vencimiento: columnas[3].innerText,
+            cantidad: columnas[4].innerText,
+        });
+    });
 
+    // Envía los datos al servidor
+    fetch("{% url 'generar_pdf' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}", // Django CSRF Token
+        },
+        body: JSON.stringify({ observacion, productos }),
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.blob(); // Devuelve el PDF como blob
+        }
+        throw new Error("Error al generar el PDF");
+    })
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "NotaEntrada.pdf"; // Nombre del archivo
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    })
+    .catch(error => console.error(error));
+});
+
+</script>
 </body>
 </html>
 {% endblock %}
