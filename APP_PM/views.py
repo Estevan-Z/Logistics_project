@@ -1,10 +1,15 @@
 import pandas as pd
+from xhtml2pdf import pisa
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CrearProductoForm, InsertarProductosForm
-from .models import Crear_producto
+from .forms import CrearProductoForm, InsertarProductosForm, ProveedorForm
+from .models import Crear_producto, CrearProveedor
 from django.contrib import messages
-from reportlab.pdfgen import canvas
 from django.http import JsonResponse, HttpResponse
+from io import BytesIO
+from datetime import datetime
+from django.template.loader import render_to_string
+from django.http import HttpResponse
+from xhtml2pdf import pisa
 from io import BytesIO
 from datetime import datetime
 
@@ -196,35 +201,40 @@ def generar_pdf(request):
         productos = data.get("productos", [])
         observacion = data.get("observacion", "")
         
-        buffer = BytesIO()
-        p = canvas.Canvas(buffer)
+        # Preparar los datos para el HTML
+        context = {
+            "productos": productos,
+            "observacion": observacion,
+            "fecha": datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+        }
+
+        # Renderizar el template HTML con los datos
+        html = render_to_string("Notas/Nota_entrada_pdf.html", context)
+
+        # Crear el PDF a partir del HTML
+        response = HttpResponse(content_type="application/pdf")
+        response["Content-Disposition"] = 'inline; filename="NotaEntrada.pdf"'
+
+        pisa_status = pisa.CreatePDF(BytesIO(html.encode("UTF-8")), dest=response, encoding="UTF-8")
         
-        # Encabezado del PDF
-        p.drawString(100, 800, "Nota de Entrada")
-        p.drawString(100, 780, f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        p.drawString(100, 760, f"Observación: {observacion}")
-        
-        # Tabla de productos
-        y = 740
-        p.drawString(100, y, "ID")
-        p.drawString(150, y, "Producto")
-        p.drawString(300, y, "Lote")
-        p.drawString(400, y, "Fecha Venc.")
-        p.drawString(500, y, "Cantidad")
-        y -= 20
-        
-        for producto in productos:
-            p.drawString(100, y, str(producto["id"]))
-            p.drawString(150, y, producto["nombre"])
-            p.drawString(300, y, producto["lote"])
-            p.drawString(400, y, producto["vencimiento"])
-            p.drawString(500, y, str(producto["cantidad"]))
-            y -= 20
-        
-        # Finaliza el PDF
-        p.save()
-        buffer.seek(0)
-        
-        return HttpResponse(buffer, content_type="application/pdf")
+        # Comprobar si hubo errores al generar el PDF
+        if pisa_status.err:
+            return HttpResponse("Hubo un error al generar el PDF.", status=500)
+
+        return response
+    
+def lista_proveedores(request):
+    proveedores = CrearProveedor.objects.all()
+    return render(request, 'Proveedores/Lista_proveedores.html', {'proveedores': proveedores})
+
+def crear_proveedor(request):
+    if request.method == 'POST':
+        form = ProveedorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_proveedores')  # Redirige a la lista de proveedores
+    else:
+        form = ProveedorForm()
+    return render(request, 'Proveedores/Crear_proveedor.html', {'form': form})
 
 

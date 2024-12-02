@@ -15,14 +15,16 @@
         <a href="{% static 'plantillas/plantilla_productos.xlsx' %}" download class="btn btn-secondary">
             Descargar Plantilla
         </a>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Subir</button>
-        </form>
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}  
+        <div class="Container_Form">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Subir</button>
+            </form>
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}  
+        </div>
     </div>
     <script>
     // Esperamos a que el DOM se cargue completamente
@@ -72,7 +74,17 @@
             {% endfor %}
         </script>
     {% endif %}
- 
+ <style>
+    .Container_Form{
+        max-width: 50%;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    }
+ </style>
 </body>
 </html>
 {% endblock %}

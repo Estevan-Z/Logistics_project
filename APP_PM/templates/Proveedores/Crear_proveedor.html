@@ -1,0 +1,35 @@
+{% extends 'Home/home.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Proveedor</title>
+</head>
+<body>
+<div class="container">
+    <h1>Registrar Nuevo Proveedor</h1>
+    <div class="Container_Form">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
+</div>
+<style>
+    .Container_Form{
+        max-width: 50%;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    }
+</style>
+</body>
+</html>
+{% endblock %}

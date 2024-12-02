@@ -1,5 +1,5 @@
 from django import forms
-from .models import Crear_producto,NotaEntrada, InsertarProductos
+from .models import Crear_producto,NotaEntrada, InsertarProductos,CrearProveedor
 
 #CREAR PRODUCTOS
 class CrearProductoForm(forms.ModelForm):
@@ -57,6 +57,18 @@ class NotaEntradaForm(forms.ModelForm):
                 'class': 'form-control',
                 'type': 'date'  # Selector de fecha
             }),
+        }
+
+class ProveedorForm(forms.ModelForm):
+    class Meta:
+        model = CrearProveedor
+        fields = ['nombre', 'nit', 'direccion', 'telefono', 'correo_electronico']
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre del proveedor'}),
+            'nit': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'NIT'}),
+            'direccion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Dirección'}),
+            'telefono': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Teléfono'}),
+            'correo_electronico': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Correo Electrónico'}),
         }
 
 

@@ -6,7 +6,6 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
         <link rel="stylesheet" href="{% static 'css/Nota_entrada.css' %}">
     <title>Agregar Nota de Entrada</title>
 </head>
@@ -179,7 +178,7 @@
                     <td>{{ nota.producto.id_producto }}</td>
                     <td>{{ nota.producto.nombre_producto }}</td>
                     <td>{{ nota.lote }}</td>
-                    <td>{{ nota.fecha_vencimiento }}</td>
+                    <td>{{ nota.fecha_vencimiento|date:"d/m/Y" }}</td>
                     <td>{{ nota.cantidad }}</td>
                 </tr>
                 {% endfor %}
@@ -244,55 +243,59 @@ $(function() {
 });
 </script>
 <script>
+    // Mostrar el modal al presionar F1
     document.addEventListener("keydown", function(event) {
-    if (event.key === "F1") {
-        event.preventDefault(); // Evita la función predeterminada del navegador
-        // Muestra el modal
-        $("#modalObservacion").modal("show");
-    }
-});
-document.getElementById("guardarObservacion").addEventListener("click", function() {
-    const observacion = document.getElementById("observacion").value;
-    const productos = [];
-    
-    // Captura los datos de la tabla
-    document.querySelectorAll("table tbody tr").forEach(row => {
-        const columnas = row.querySelectorAll("td");
-        productos.push({
-            id: columnas[0].innerText,
-            nombre: columnas[1].innerText,
-            lote: columnas[2].innerText,
-            vencimiento: columnas[3].innerText,
-            cantidad: columnas[4].innerText,
-        });
+        if (event.key === "F1") {
+            event.preventDefault(); // Evita la acción predeterminada del navegador
+            $('#modalObservacion').modal('show'); // Muestra el modal
+        }
     });
 
-    // Envía los datos al servidor
-    fetch("{% url 'generar_pdf' %}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": "{{ csrf_token }}", // Django CSRF Token
-        },
-        body: JSON.stringify({ observacion, productos }),
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.blob(); // Devuelve el PDF como blob
-        }
-        throw new Error("Error al generar el PDF");
-    })
-    .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "NotaEntrada.pdf"; // Nombre del archivo
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-    })
-    .catch(error => console.error(error));
-});
+    // Guardar observación y generar el PDF
+    document.getElementById("guardarObservacion").addEventListener("click", function() {
+        const observacion = document.getElementById("observacion").value;
+        const productos = [];
+
+        // Captura los datos de la tabla
+        document.querySelectorAll("table tbody tr").forEach(row => {
+            const columnas = row.querySelectorAll("td");
+            productos.push({
+                id: columnas[0].innerText,
+                nombre: columnas[1].innerText,
+                lote: columnas[2].innerText,
+                vencimiento: columnas[3].innerText,
+                cantidad: columnas[4].innerText,
+            });
+        });
+
+        // Envía los datos al servidor
+        fetch("/generar_pdf/", { // Reemplaza con tu URL Django
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}", // Token CSRF de Django
+            },
+            body: JSON.stringify({ observacion, productos }),
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.blob(); // Devuelve el PDF como blob
+            }
+            throw new Error("Error al generar el PDF");
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "NotaEntrada.pdf"; // Nombre del archivo
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        })
+        .catch(error => console.error(error));
+
+        $('#modalObservacion').modal('hide'); // Cierra el modal
+    });
 
 </script>
 </body>

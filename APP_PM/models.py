@@ -67,3 +67,14 @@ class NotaEntrada(models.Model):
 
     def __str__(self):
         return f"{self.producto.nombre_producto} - {self.cantidad} - Lote: {self.lote}"
+
+
+class CrearProveedor(models.Model):
+    nombre = models.CharField(max_length=100, verbose_name="Nombre")
+    nit = models.CharField(max_length=15, verbose_name="NIT", unique=True)
+    direccion = models.TextField(verbose_name="Dirección")
+    telefono = models.CharField(max_length=15, verbose_name="Número Telefónico")
+    correo_electronico = models.EmailField(verbose_name="Correo Electrónico", unique=True)
+
+    def __str__(self):
+        return self.nombre

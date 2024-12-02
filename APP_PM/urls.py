@@ -14,6 +14,8 @@ urlpatterns = [
     path('insertar-productos/', views.insertar_productos, name='insertar_productos'),
 
     path("generar_pdf/", views.generar_pdf, name="generar_pdf"),
+    path('lista_proveedores/', views.lista_proveedores, name='lista_proveedores'),
+    path('crear_proveedor/', views.crear_proveedor, name='crear_proveedor'),
 
 
 
