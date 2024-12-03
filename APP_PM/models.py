@@ -80,7 +80,9 @@ class CrearProveedor(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id_proveedor:
-            self.id_proveedor = f"PROV{''.join(random.choices(string.digits, k=4))}"
+            # Prefijo 'PROV' + 6 dígitos aleatorios (puedes ajustar la longitud)
+            self.id_proveedor = f"PROV{''.join(random.choices(string.digits, k=6))}"
+            # Evitar duplicados
             while CrearProveedor.objects.filter(id_proveedor=self.id_proveedor).exists():
-                self.id_proveedor = f"PROV{''.join(random.choices(string.digits, k=4))}"
+                self.id_proveedor = f"PROV{''.join(random.choices(string.digits, k=6))}"
         super(CrearProveedor, self).save(*args, **kwargs)

@@ -12,7 +12,6 @@
 </head>
 <body>
     <style>
-    
         .container_Form{
             max-width: 50%;
             margin: 20px auto;
@@ -130,14 +129,12 @@
     
 <div class="container">
     <h2>Agregar Producto a Nota de Entrada</h2>
-    <div class="Container_proveedor">
-        <p>Proveedor
-            <input type="text" id="proveedor" name="proveedor" placeholder="Buscar proveedor...">
-        </p>
-        <input type="hidden" id="proveedor-id" name="proveedor_id">
-    </div>
-    <div class=" container_Form">
     
+    <div class=" container_Form">
+        <label for="">Proveedor</label>
+        <input class="form-control ui-autocomplete-input" type="text" id="proveedor" name="proveedor" placeholder="Buscar proveedor...">
+        <input type="hidden" id="proveedor-id" name="proveedor_id">
+        <br>
         <form method="post">
             {% csrf_token %}
            
@@ -303,16 +300,23 @@ $(function() {
 </script>
 
 <script>
-   $(function() {
+  $(function() {
     $("#proveedor").autocomplete({
-        source: "{% url 'buscar_proveedor' %}",  // Nombre de la URL correcta
+        source: "{% url 'buscar_proveedor' %}",  // Ruta para buscar proveedores
         minLength: 2,  // Mínimo de caracteres para activar la búsqueda
         select: function(event, ui) {
             // Cuando se selecciona un proveedor
-            $("#proveedor-id").val(ui.item.value);  // Guarda el id del proveedor seleccionado
+            $("#proveedor").val(ui.item.label);  // Muestra el nombre del proveedor en el input de texto
+            $("#proveedor-id").val(ui.item.value);  // Guarda el id del proveedor en el input oculto
+            return false;  // Evita que se sobrescriba el valor del input
         }
-    });
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        return $("<li>")
+            .append("<div class='ui-menu-item-wrapper'>" + item.label + "</div>")
+            .appendTo(ul);
+    };
 });
+
 </script>
 
 </body>

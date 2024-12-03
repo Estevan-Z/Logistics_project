@@ -1,13 +1,21 @@
-import pandas as pd
-from xhtml2pdf import pisa
-from io import BytesIO
+import random
+import string
 from datetime import datetime
+from io import BytesIO
+import pandas as pd
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from django.template.loader import render_to_string
 from django.contrib import messages
-from .forms import CrearProductoForm, InsertarProductosForm, ProveedorForm, NotaEntradaForm
+from xhtml2pdf import pisa
+from .forms import (
+    CrearProductoForm,
+    InsertarProductosForm,
+    ProveedorForm,
+    NotaEntradaForm
+)
 from .models import Crear_producto, NotaEntrada, CrearProveedor
+
 
 def home(request):
     return render(request, 'Home/home.html')
@@ -65,19 +73,10 @@ def editar_producto(request, producto_id):
 
     return render(request, 'Productos/Edita_producto.html', {'form': form})
 
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Crear_producto
-
 def eliminar_producto(request, id_producto):
     producto = get_object_or_404(Crear_producto, id_producto=id_producto)
     producto.delete()
     return redirect('productos_listado')
-
-
-from django.shortcuts import render, redirect
-from .models import NotaEntrada, Crear_producto
-from .forms import NotaEntradaForm
-
 
 def agregar_nota_entrada(request):
     if request.method == 'POST':
@@ -227,4 +226,3 @@ def buscar_proveedor(request):
     proveedores = CrearProveedor.objects.filter(nombre__icontains=query)
     proveedores_list = [{'label': proveedor.nombre, 'value': proveedor.id_proveedor} for proveedor in proveedores]
     return JsonResponse(proveedores_list, safe=False)
-
