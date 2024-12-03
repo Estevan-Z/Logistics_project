@@ -6,6 +6,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
         <link rel="stylesheet" href="{% static 'css/Nota_entrada.css' %}">
     <title>Agregar Nota de Entrada</title>
 </head>
@@ -128,16 +129,18 @@
     </style>
     
 <div class="container">
+    <h2>Agregar Producto a Nota de Entrada</h2>
+    <div class="Container_proveedor">
+        <p>Proveedor
+            <input type="text" id="proveedor" name="proveedor" placeholder="Buscar proveedor...">
+        </p>
+        <input type="hidden" id="proveedor-id" name="proveedor_id">
+    </div>
     <div class=" container_Form">
-        <h2>Agregar Producto a Nota de Entrada</h2>
-        
-        <!-- Formulario -->
+    
         <form method="post">
             {% csrf_token %}
-            <div>
-                {{ form.cliente.label_tag }}
-                {{ form.cliente }}
-            </div>
+           
             <div>
                 {{ form.producto_nombre.label_tag }}
                 {{ form.producto_nombre }}
@@ -298,6 +301,20 @@ $(function() {
     });
 
 </script>
+
+<script>
+   $(function() {
+    $("#proveedor").autocomplete({
+        source: "{% url 'buscar_proveedor' %}",  // Nombre de la URL correcta
+        minLength: 2,  // Mínimo de caracteres para activar la búsqueda
+        select: function(event, ui) {
+            // Cuando se selecciona un proveedor
+            $("#proveedor-id").val(ui.item.value);  // Guarda el id del proveedor seleccionado
+        }
+    });
+});
+</script>
+
 </body>
 </html>
 {% endblock %}

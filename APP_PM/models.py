@@ -63,13 +63,12 @@ class NotaEntrada(models.Model):
     cantidad = models.PositiveIntegerField()  # Cantidad de producto ingresada
     lote = models.CharField(max_length=100, default='')   # Número de lote del producto
     fecha_vencimiento = models.DateField(null=True, blank=True) # Fecha de vencimiento del producto
-    cliente = models.CharField(max_length=100, default='Proecologicos S.A.S')  # Nombre del cliente, valor predeterminado
 
     def __str__(self):
         return f"{self.producto.nombre_producto} - {self.cantidad} - Lote: {self.lote}"
 
-
 class CrearProveedor(models.Model):
+    id_proveedor = models.CharField(max_length=10, unique=True, editable=False, blank=True)
     nombre = models.CharField(max_length=100, verbose_name="Nombre")
     nit = models.CharField(max_length=15, verbose_name="NIT", unique=True)
     direccion = models.TextField(verbose_name="Dirección")
@@ -77,4 +76,11 @@ class CrearProveedor(models.Model):
     correo_electronico = models.EmailField(verbose_name="Correo Electrónico", unique=True)
 
     def __str__(self):
-        return self.nombre
+        return f"{self.id_proveedor} - {self.nombre}"
+
+    def save(self, *args, **kwargs):
+        if not self.id_proveedor:
+            self.id_proveedor = f"PROV{''.join(random.choices(string.digits, k=4))}"
+            while CrearProveedor.objects.filter(id_proveedor=self.id_proveedor).exists():
+                self.id_proveedor = f"PROV{''.join(random.choices(string.digits, k=4))}"
+        super(CrearProveedor, self).save(*args, **kwargs)

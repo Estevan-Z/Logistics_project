@@ -32,18 +32,9 @@ class NotaEntradaForm(forms.ModelForm):
             'placeholder': 'Buscar producto...'
         })
     )
-
-    cliente = forms.CharField(
-        label="Cliente",
-        initial="Proecologicos S.A.S",  # Valor predeterminado
-        widget=forms.TextInput(attrs={
-            'class': 'form-control'
-        })
-    )
-
     class Meta:
         model = NotaEntrada
-        fields = ['producto_nombre', 'lote', 'fecha_vencimiento', 'cantidad', 'cliente']
+        fields = ['producto_nombre', 'lote', 'fecha_vencimiento', 'cantidad', ]
         widgets = {
             'cantidad': forms.NumberInput(attrs={
                 'class': 'form-control',

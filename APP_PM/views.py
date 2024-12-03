@@ -1,17 +1,13 @@
 import pandas as pd
 from xhtml2pdf import pisa
+from io import BytesIO
+from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CrearProductoForm, InsertarProductosForm, ProveedorForm
-from .models import Crear_producto, CrearProveedor
-from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
-from io import BytesIO
-from datetime import datetime
 from django.template.loader import render_to_string
-from django.http import HttpResponse
-from xhtml2pdf import pisa
-from io import BytesIO
-from datetime import datetime
+from django.contrib import messages
+from .forms import CrearProductoForm, InsertarProductosForm, ProveedorForm, NotaEntradaForm
+from .models import Crear_producto, NotaEntrada, CrearProveedor
 
 def home(request):
     return render(request, 'Home/home.html')
@@ -96,13 +92,9 @@ def agregar_nota_entrada(request):
     else:
         form = NotaEntradaForm()
 
+    proveedores = CrearProveedor.objects.all()
     notas = NotaEntrada.objects.all()
-    return render(request, 'Notas/Nota_Entrada.html', {'form': form, 'notas': notas})
-
-
-# views.py
-from django.http import JsonResponse
-from .models import Crear_producto
+    return render(request, 'Notas/Nota_Entrada.html', {'form': form, 'notas': notas, 'proveedores': proveedores})
 
 def buscar_producto(request):
     if 'term' in request.GET:
@@ -110,13 +102,6 @@ def buscar_producto(request):
         productos = list(qs.values('id', 'nombre_producto'))
         return JsonResponse(productos, safe=False)
     return JsonResponse([], safe=False)
-
-
-import pandas as pd
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from .forms import InsertarProductosForm
-from .models import Crear_producto
 
 def insertar_productos(request):
     if request.method == "POST":
@@ -237,4 +222,9 @@ def crear_proveedor(request):
         form = ProveedorForm()
     return render(request, 'Proveedores/Crear_proveedor.html', {'form': form})
 
+def buscar_proveedor(request):
+    query = request.GET.get('term', '')
+    proveedores = CrearProveedor.objects.filter(nombre__icontains=query)
+    proveedores_list = [{'label': proveedor.nombre, 'value': proveedor.id_proveedor} for proveedor in proveedores]
+    return JsonResponse(proveedores_list, safe=False)
 
