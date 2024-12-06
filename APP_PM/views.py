@@ -226,3 +226,4 @@ def buscar_proveedor(request):
     proveedores = CrearProveedor.objects.filter(nombre__icontains=query)
     proveedores_list = [{'label': proveedor.nombre, 'value': proveedor.id_proveedor} for proveedor in proveedores]
     return JsonResponse(proveedores_list, safe=False)
+

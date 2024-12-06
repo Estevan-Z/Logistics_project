@@ -12,8 +12,12 @@
 </head>
 <body>
     <style>
+        .container{
+            display: flex;
+        }
         .container_Form{
-            max-width: 50%;
+            width: 50%;
+            max-height: 100%;
             margin: 20px auto;
             padding: 20px;
             background-color: #fff;
@@ -71,7 +75,7 @@
 
         /* Tabla de productos */
         table {
-            width: 100%;
+            max-width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
@@ -128,16 +132,15 @@
     </style>
     
 <div class="container">
-    <h2>Agregar Producto a Nota de Entrada</h2>
     
     <div class=" container_Form">
+    <h2>Nota de Entrada</h2>
         <label for="">Proveedor</label>
         <input class="form-control ui-autocomplete-input" type="text" id="proveedor" name="proveedor" placeholder="Buscar proveedor...">
         <input type="hidden" id="proveedor-id" name="proveedor_id">
         <br>
-        <form method="post">
+        <form id="notaEntradaForm">
             {% csrf_token %}
-           
             <div>
                 {{ form.producto_nombre.label_tag }}
                 {{ form.producto_nombre }}
@@ -151,17 +154,16 @@
                 {{ form.fecha_vencimiento.label_tag }}
                 {{ form.fecha_vencimiento }}
             </div>
-            
             <div>
                 {{ form.cantidad.label_tag }}
                 {{ form.cantidad }}
             </div>
-            <button type="submit">Guardar</button>
+            <button type="button" id="guardarProductoBtn">Guardar</button>
         </form>
     </div>
     <div class="container_tabla">   
         <!-- Tabla de Productos -->
-        <h3>Productos en la Nota de Entrada</h3>
+        <h3>Productos</h3>
         <table>
             <thead>
                 <tr>
@@ -172,7 +174,7 @@
                     <th>Cantidad</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="productosTabla">
                 {% for nota in notas %}
                 <tr>
                     <td>{{ nota.producto.id_producto }}</td>
@@ -318,6 +320,7 @@ $(function() {
 });
 
 </script>
+
 
 </body>
 </html>
